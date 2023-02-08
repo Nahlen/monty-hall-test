@@ -3,19 +3,31 @@ interface IGameHistoryEntry {
     data: any,
 }
 
-export class GameHistory {
-    history: IGameHistoryEntry[];
+type IGameType = string;
 
-    constructor() {
+interface IGameHistoryResponse {
+    gameType: IGameType;
+    history: IGameHistoryEntry[];
+}
+
+export class GameHistory {
+    private history: IGameHistoryEntry[];
+    private gameType: IGameType;
+
+    constructor(gameType: IGameType) {
+        this.gameType = gameType;
         this.history = [];
     }
 
-    addEntry(entry: IGameHistoryEntry) {
+    log(entry: IGameHistoryEntry) {
         this.history.push(entry);
     }
 
-    getHistory(): IGameHistoryEntry[] {
-        return this.history;
+    getHistory(): IGameHistoryResponse {
+        return {
+            gameType: this.gameType,
+            history: this.history,
+        };
         // .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) ???
     }
 }
