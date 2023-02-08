@@ -1,0 +1,38 @@
+.gameWrapper {
+    height: auto;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.gameControls {
+    width: 100%;
+    margin-bottom: 1em;
+
+    button {
+        margin-right: 1em;
+    }
+}
+
+.gameArea {
+    background: linear-gradient(lightgrey, grey);
+    width: 100%;
+    padding: 2em;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column; 
+}
+
+.doorsWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+    }
+}

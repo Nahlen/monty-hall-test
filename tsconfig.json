@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "jsx": "react",
+    "module": "commonjs",
+    "strict": true,
+    "skipLibCheck": true,
+    "target": "ES2016",
+    "rootDir": "./",
+    "outDir": "./dist",
+    "forceConsistentCasingInFileNames": true
+  },
+  
+  "include": [
+    "./server/**/*"
+  ]
+}
