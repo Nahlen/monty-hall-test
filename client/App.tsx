@@ -3,24 +3,30 @@ import { createRoot } from "react-dom/client";
 import {
   createBrowserRouter,
   RouterProvider,
-  Route,
-  Link,
 } from "react-router-dom";
 
-import { GameArea } from "./containers/GameArea";
+import { Game } from "./containers/Game";
+import { Simulate } from "./containers/Simulate";
+import { StartPage } from "./containers/StartPage";
+import { GameHistory } from "./containers/GameHistory";
+import "./App.scss";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <>
-        <GameArea />
-      </>
-    ),
+    element: <StartPage />,
   },
   {
-    path: "about",
-    element: <div>About</div>,
+    path: "/game",
+    element: <Game />,
+  },
+  {
+    path: "/simulate",
+    element: <Simulate />,
+  },
+  {
+    path: "/history",
+    element: <GameHistory />,
   },
 ]);
 

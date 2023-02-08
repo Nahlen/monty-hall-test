@@ -1,0 +1,59 @@
+.gameWrapper {
+    height: auto;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly; 
+    position: relative;
+
+    h1 {
+        margin: 0;
+    }
+}
+
+.overlay {
+    width: 100%;
+    height: 100%;
+    background: rgba(1, 1, 1, 0.3);
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gameArea {
+    background: linear-gradient(lightgrey, grey);
+    width: auto;
+    padding: 2em;
+    height: auto;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column; 
+}
+
+.doorsWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+    }
+}
+
+.buttonWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 3.5em; 
+
+    button {
+        flex: .3;
+        margin: 0 .5em;
+    }
+}

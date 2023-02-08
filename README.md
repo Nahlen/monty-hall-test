@@ -18,7 +18,7 @@
 
 
 ## Rules
-[Rules](static/rules.png)
+![Rules](static/rules.png)
 
 ## Q & A
 ### Why parcel?

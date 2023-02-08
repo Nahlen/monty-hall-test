@@ -127,8 +127,6 @@ export class MontyHallGameEngine {
             throw new Error(`Game Engine Error: Door with number ${selectDoorNumber} not available`);
         }
         const otherDoorNumbers: number[] = [1, 2, 3].filter(doorNumber => doorNumber !== selectDoorNumber);
-        console.log("otherDoorNumbers", otherDoorNumbers);
-        console.log("selectDoorNumber", selectDoorNumber);
         let doorNumberToOpen: number = otherDoorNumbers[Math.floor(Math.random() * 2)];
 
         // AUTOMATIC DOOR OPEN LOGIC

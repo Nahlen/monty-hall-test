@@ -1,28 +1,32 @@
 import React from "react";
 import * as style from "./index.module.scss";
 
-interface IDoorProps {
+/* interface IDoorProps {
     hasCar: boolean,
     open: boolean,
     index: number,
     selectedDoor: number | boolean,
     selectDoor: Function
-}
+} */
 
-export const Door = ({ hasCar, open, index, selectedDoor, selectDoor }: IDoorProps) => {
+export const Door = ({ door, doorNumber, selectDoor, selectable }: any) => {
+    if (!door) {
+        return null;
+    };
+
     return <div
         className={`
             ${style.doorFrame}
-            ${selectedDoor === false ? style.selectable : ""}
-            ${selectedDoor === index ? style.selected : ""}
+            ${selectable ? style.selectable : ""}
+            ${door.selected ? style.selected : ""}
         `}
-        key={index}
-        onClick={() => selectDoor(index)}>
-        {hasCar && open && <span className={style.price}>
+            onClick={() => selectDoor(doorNumber)}
+        >
+        {door.result === "Win" && door.open && <span className={style.price}>
             🚗
         </span>}
 
-        <div className={`${style.door} ${open ? style.open : ""}`}>
+        <div className={`${style.door} ${door.open ? style.open : ""}`}>
             <div className={style.questionMark}>
                 ?
             </div>
