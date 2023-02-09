@@ -112,16 +112,18 @@ export class MontyHallGameEngine {
         });
     }
 
+    private deselectAllDoors(): void {
+        Object.values(this.currentGameRound.doors).forEach(door => {
+            door.selected = false;
+        });
+    }
+
     private selectDoor(selectDoorNumber: number) {
         if (!this.currentGameRound.doors[selectDoorNumber]) {
             throw new Error(`Game Engine Error: Door with number ${selectDoorNumber} not available`);
         }
 
-        // Deselect all doors
-        Object.values(this.currentGameRound.doors).forEach(door => {
-            door.selected = false;
-        });
-
+        this.deselectAllDoors();
         this.currentGameRound.doors[selectDoorNumber].selected = true;
         this.currentGameRound.actions = ["STAY", "SELECT_OTHER_DOOR", "CANCEL"];
     }
@@ -149,14 +151,9 @@ export class MontyHallGameEngine {
     }
 
     private completeGame() {
-        this.currentGameRound.actions = ["START"];
-        let result = Result.LOSS;
-        
-        if (this.getSelectedDoor().result === DoorContent.Win) {
-            result = Result.WIN;
-        }
-    
+        const result = this.getSelectedDoor().result === DoorContent.Win ? Result.WIN : Result.LOSS;
         this.currentGameRound.state = State.COMPLETED;
+        this.currentGameRound.actions = ["START"];
         this.currentGameRound.result = result;
         this.openAllDoors();
         this.logToGameHistory();
@@ -168,17 +165,8 @@ export class MontyHallGameEngine {
 
     private selectOtherDoor(): void {
         this.currentGameRound.method = Method.SELECT_OTHER_DOOR;
-
         const otherDoor = Object.values(this.currentGameRound.doors).find(door => !door.selected && !door.open);
-
         this.selectDoor(otherDoor?.number || 0);
-        /* Object.values(this.currentGameRound.doors).forEach(door => {
-            // Select the door that is not opened and not selected
-            console.log("DOOR", door.open, door.selected);
-            if (!door.open && !door.selected) {
-                this.selectDoor(door.number);
-            }
-        }); */
     }
 
     private validateAction(action: string): void {

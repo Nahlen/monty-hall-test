@@ -19,7 +19,10 @@ export const formatChartData = (historyData: any[]) => {
             if (formatted[index]) {
                 formatted[index][method] = noOfWins;
             } else {
-                formatted.push(chartEntry);
+                formatted.push({
+                    ...chartEntry,
+                    round: index + 1,
+                });
             }
         });            
     });

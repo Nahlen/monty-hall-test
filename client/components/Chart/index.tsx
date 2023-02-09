@@ -11,9 +11,9 @@ export const Chart = ({ data }) => {
                 data={data}
             >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis label="Rounds" dataKey="rounds" />
+                <XAxis label="Round" dataKey="round" />
                 <YAxis label="Wins" type="number" domain={['dataMin', data.length]} />
-                <Tooltip labelFormatter={(roundNr) => 'Round: ' + roundNr} />
+                <Tooltip labelFormatter={(round) => 'Round: ' + round} />
                 <Legend />
                 <Line type="monotone" dataKey="STAY" stroke="#8884d8" />
                 <Line type="monotone" dataKey="SELECT_OTHER_DOOR" stroke="#82ca9d" />

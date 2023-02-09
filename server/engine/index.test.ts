@@ -56,7 +56,7 @@ describe('Monty Hall Game Engine', () => {
         );
     });
 
-    describe('Active game with no door selected', () => {
+    describe('Started game', () => {
         const engine = new MontyHallGameEngine();
         engine.makeAction("START");
 
