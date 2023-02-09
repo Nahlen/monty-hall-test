@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import * as style from "./index.module.scss";
-import { Door } from "../../components/Door";
+import { Doors } from "../../components/Doors";
 import { ActionButton } from "../../components/ActionButton";
 
 import { getGameRound, postAction } from "../../services";
-import { useStaticContext } from "../../services/context";
-
+import { useStaticContext } from "../../context";
 
 export const Game = () => {
-    const [gameRound, setGameRound] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
+    const [ gameRound, setGameRound ] = useState<any>(null);
     const { languages } = useStaticContext();
     const navigate = useNavigate();
 
@@ -20,14 +18,18 @@ export const Game = () => {
     };
 
     const selectDoor = async (doorNumber: number) => {
-        if (actions.indexOf("SELECT_DOOR") === -1) {
+        const { actions } = gameRound;
+        if (!actions.includes("SELECT_DOOR")) {
             return;
         }
         makeAction("SELECT_DOOR", doorNumber);
     };
 
-    const goHome = async () => {
-        if (actions.indexOf("CANCEL") !== -1) {
+    const returnHome = async () => {
+        const { actions } = gameRound;
+
+        //Only cancel if you have started playing (i.e. selected door) and goes back
+        if (actions.includes("CANCEL") && !actions.includes("SELECT_DOOR")) {
             await makeAction("CANCEL");
         }
         navigate("/");
@@ -35,12 +37,13 @@ export const Game = () => {
 
     const initGame = async () => {
         const gameRound = await getGameRound();
-        setGameRound(gameRound);
         const { state } = gameRound;
+
         if (state === "INACTIVE" || state === "COMPLETED") {
             await makeAction("START");
+        } else {
+            setGameRound(gameRound);
         }
-        setLoading(false);
     };
 
     useEffect(() => {
@@ -52,12 +55,12 @@ export const Game = () => {
     }, []);
 
     const { actions = [], doors = {}, result = null } = gameRound || {};
-    const selectable = actions.indexOf("SELECT_DOOR") !== -1;
-    let explainText = " ";
+    const selectable = actions.includes("SELECT_DOOR");
+    let explainText = "";
 
     if (selectable) {
         explainText = languages.SELECT_DOOR;
-    } else if (actions.indexOf("STAY") !== -1) {
+    } else if (actions.includes("STAY")) {
         explainText = languages.FINAL_CHOICE;
     } else if (result === "WIN") {
         explainText = languages.WIN;
@@ -66,32 +69,18 @@ export const Game = () => {
     }
 
     return <div className={`${style.gameWrapper}`}>
-        <button className={`${style.goHome}`} onClick={goHome}>{languages.CANCEL}</button>
+        <button onClick={returnHome}>{languages.RETURN}</button>
 
         <div className={style.gameArea}>
-            {!gameRound && <div>Loading</div>}
             {gameRound && <>
-                <div className={style.doorsWrapper}>
-                    <Door door={doors[1]} doorNumber={1} selectDoor={selectDoor} selectable={selectable} />
-                    <Door door={doors[2]} doorNumber={2} selectDoor={selectDoor} selectable={selectable} />
-                    <Door door={doors[3]} doorNumber={3} selectDoor={selectDoor} selectable={selectable} />
-                </div>
+                <Doors doors={doors} onClick={selectDoor} selectable={selectable} />
                 <h1>{explainText}</h1>
             </>}
 
             <div className={style.buttonWrapper}>
-                {actions.map(action => {
-                    if (action === "SELECT_DOOR") {
-                        return null;
-                    }
-                    if (action === "CANCEL") {
-                        return null;
-                    }
-                    if (loading) {
-                        return null;
-                    }
-                    return <ActionButton action={action} makeAction={() => makeAction(action)} />;
-                })}
+                {actions.map(action => (
+                    <ActionButton key={action} action={action} makeAction={() => makeAction(action)} />
+                ))}
             </div>
         </div>
     </div>;

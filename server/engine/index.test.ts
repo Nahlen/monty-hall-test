@@ -217,9 +217,4 @@ describe('Monty Hall Game Engine', () => {
             }
         );
     });
-
-    /* const expectError = () => {
-        engine.makeAction("TEST");
-    }
-    expect(expectError).toThrowError(); */
 });

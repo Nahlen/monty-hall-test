@@ -24,8 +24,6 @@ export enum Method {
     SELECT_OTHER_DOOR = "SELECT_OTHER_DOOR",
 }
 
-// type Action = "START" | "SELECT" | "SELECT_DOOR" | "SELECT_OTHER_DOOR" | "CANCEL" | "STAY";  
-
 interface IDoor {
     result: DoorContent;
     open: boolean;
@@ -41,11 +39,6 @@ interface IGameRound {
     actions: string[];
     method: Method;
 }
-
-// TODO: Validate state
-// getNewGameRound => current not completed = error
-// selectDoor => current selected, should maybe be done with other method?
-// Open door logic => returned by api, and on finalize game
 
 export class MontyHallGameEngine {
     private currentGameRound: IGameRound;
@@ -93,10 +86,6 @@ export class MontyHallGameEngine {
         this.currentGameRound.doors[winningDoorNumber].result = DoorContent.Win;
     }
 
-    public getCurrentGame(): IGameRound {
-        return this.currentGameRound;
-    }
-
     private logToGameHistory(): void {
         this.gameHistory.log({
             date: new Date(),
@@ -104,18 +93,14 @@ export class MontyHallGameEngine {
         });
     }
 
-    public getGameHistory(): IGameHistoryResponse {
-        return this.gameHistory.getHistory();
-    }
-
     private openRandomDoor(): void {
-        const otherDoorNumbers: number[] = [1, 2, 3].filter(doorNumber => doorNumber !== this.getSelectedDoor().number);
-        let doorNumberToOpen: number = otherDoorNumbers[Math.floor(Math.random() * 2)];
+        const doorNumbers: number[] = [1, 2, 3].filter(doorNumber => doorNumber !== this.getSelectedDoor().number);
+        let doorNumberToOpen: number = doorNumbers[Math.floor(Math.random() * 2)]; // 0 or 1
 
         if (this.currentGameRound.doors[doorNumberToOpen].result === DoorContent.Win) {
             // Ooops, can't open that door. It has the win!
             // Select the final remaining door.
-            doorNumberToOpen = otherDoorNumbers.filter(doorNumber => doorNumber !== doorNumberToOpen)[0];
+            doorNumberToOpen = doorNumbers.filter(doorNumber => doorNumber !== doorNumberToOpen)[0];
         }
 
         this.currentGameRound.doors[doorNumberToOpen].open = true;
@@ -192,6 +177,14 @@ export class MontyHallGameEngine {
         if (this.currentGameRound.actions.indexOf(action) === -1) {
             throw new Error(`Game Engine Error: ${action} action not allowed.`);
         }
+    }
+
+    public getCurrentGame(): IGameRound {
+        return this.currentGameRound;
+    }
+
+    public getGameHistory(): IGameHistoryResponse {
+        return this.gameHistory.getHistory();
     }
 
     public makeAction(action: string, payload?: any): IGameRound {
