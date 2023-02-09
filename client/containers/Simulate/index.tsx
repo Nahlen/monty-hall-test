@@ -33,17 +33,18 @@ export const Simulate = () => {
             <Link to={"/"}><button>{languages.RETURN}</button></Link>
 
             <h3>{languages.METHOD}</h3>
-            {methods.map((met: string) => (<label key={met}>
+            {methods.map((method: string) => (<label key={method}>
                 <input
                     type="radio"
                     name="method"
-                    checked={met === selectedMethod}
-                    onChange={() => setSelectedMethod(met)} />
-                {languages[met]}
+                    checked={method === selectedMethod}
+                    onChange={() => setSelectedMethod(method)} />
+                {languages[method]}
             </label>))}
 
             <h3>{languages.NO_OF_SIMULATIONS}</h3>
             <input value={noOfSimulations} onChange={e => setNoOfSimulations(e.target.value)} type="number" />
+
             <button onClick={onClick}>{languages.START_SIMULATION}</button>
         </div>
 

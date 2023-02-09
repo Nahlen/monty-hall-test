@@ -28,7 +28,7 @@ export const Game = () => {
     const returnHome = async () => {
         const { actions } = gameRound;
 
-        //Only cancel if you have started playing (i.e. selected door) and goes back
+        // Only cancel if you have started playing (i.e. selected door) and goes back
         if (actions.includes("CANCEL") && !actions.includes("SELECT_DOOR")) {
             await makeAction("CANCEL");
         }
@@ -68,7 +68,7 @@ export const Game = () => {
         explainText = languages.LOSS;
     }
 
-    return <div className={`${style.gameWrapper}`}>
+    return <div className={`${style.wrapper}`}>
         <button onClick={returnHome}>{languages.RETURN}</button>
 
         <div className={style.gameArea}>
