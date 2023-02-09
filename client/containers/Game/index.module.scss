@@ -35,16 +35,6 @@
     flex-direction: column; 
 }
 
-.doorsWrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    @media (max-width: 600px) {
-        flex-direction: column;
-    }
-}
-
 .buttonWrapper {
     display: flex;
     align-items: center;
