@@ -93,6 +93,10 @@ export class MontyHallGameEngine {
         this.currentGameRound.doors[winningDoorNumber].result = DoorContent.Win;
     }
 
+    public getCurrentGame(): IGameRound {
+        return this.currentGameRound;
+    }
+
     private logToGameHistory(): void {
         this.gameHistory.log({
             date: new Date(),
@@ -104,13 +108,40 @@ export class MontyHallGameEngine {
         return this.gameHistory.getHistory();
     }
 
-    private validateAction(action: string): boolean {
-        // Good place to add game engine error logging.
-        // This logging is not game history logging though.
-        if (this.currentGameRound.actions.indexOf(action) === -1) {
-            throw new Error(`Game Engine Error: ${action} action not allowed.`);
+    private openRandomDoor(): void {
+        const otherDoorNumbers: number[] = [1, 2, 3].filter(doorNumber => doorNumber !== this.getSelectedDoor().number);
+        let doorNumberToOpen: number = otherDoorNumbers[Math.floor(Math.random() * 2)];
+
+        if (this.currentGameRound.doors[doorNumberToOpen].result === DoorContent.Win) {
+            // Ooops, can't open that door. It has the win!
+            // Select the final remaining door.
+            doorNumberToOpen = otherDoorNumbers.filter(doorNumber => doorNumber !== doorNumberToOpen)[0];
         }
-        return true;
+
+        this.currentGameRound.doors[doorNumberToOpen].open = true;
+    }
+
+    private openAllDoors(): void {
+        Object.values(this.currentGameRound.doors).forEach(door => {
+            door.open = true;
+        });
+    }
+
+    private selectDoor(selectDoorNumber: number) {
+        if (!this.currentGameRound.doors[selectDoorNumber]) {
+            throw new Error(`Game Engine Error: Door with number ${selectDoorNumber} not available`);
+        }
+
+        this.currentGameRound.doors[selectDoorNumber].selected = true;
+        this.currentGameRound.actions = ["STAY", "SELECT_OTHER_DOOR", "CANCEL"];
+    }
+
+    private getSelectedDoor(): IDoor {
+        const selectedDoor = Object.values(this.currentGameRound.doors).find(door => door.selected);
+        if (!selectedDoor) {
+            throw new Error("Game Engine Error: No selected door");
+        }
+        return selectedDoor;
     }
 
     private cancelGame(): void {
@@ -127,57 +158,40 @@ export class MontyHallGameEngine {
         this.currentGameRound.actions = ["SELECT_DOOR", "CANCEL"];
     }
 
-    private selectDoor(selectDoorNumber: number) {
-        if (!this.currentGameRound.doors[selectDoorNumber]) {
-            throw new Error(`Game Engine Error: Door with number ${selectDoorNumber} not available`);
-        }
-        // TODO: Move open other door to other method
-        const otherDoorNumbers: number[] = [1, 2, 3].filter(doorNumber => doorNumber !== selectDoorNumber);
-        let doorNumberToOpen: number = otherDoorNumbers[Math.floor(Math.random() * 2)];
-
-        // AUTOMATIC DOOR OPEN LOGIC
-        if (this.currentGameRound.doors[doorNumberToOpen].result === DoorContent.Win) {
-            // Ooops, can't open that door. It has the win!
-            // Select the final remaining door.
-            doorNumberToOpen = otherDoorNumbers.filter(doorNumber => doorNumber !== doorNumberToOpen)[0];
-        }
-
-        this.currentGameRound.doors[selectDoorNumber].selected = true;
-        this.currentGameRound.doors[doorNumberToOpen].open = true;
-        this.currentGameRound.actions = ["STAY", "SELECT_OTHER_DOOR", "CANCEL"];
-    }
-
     private completeGame() {
-        const doorNumbers: number[] = [1, 2, 3];
         this.currentGameRound.actions = ["START"];
         let result = Result.LOSS;
-
-        doorNumbers.forEach(doorNumber => {
-            const door = this.currentGameRound.doors[doorNumber];
-            door.open = true;
-
-            if (door.selected === true && door.result === DoorContent.Win) {
-                result = Result.WIN;
-            }
-        });
+        
+        if (this.getSelectedDoor().result === DoorContent.Win) {
+            result = Result.WIN;
+        }
     
         this.currentGameRound.state = State.COMPLETED;
         this.currentGameRound.result = result;
+        this.openAllDoors();
         this.logToGameHistory();
     }
 
-    private selectOtherDoor() {
-        [1, 2, 3].forEach(doorNumber => {
-            const door = this.currentGameRound.doors[doorNumber];
+    private stay(): void {
+        this.currentGameRound.method = Method.STAY;
+    }
+
+    private selectOtherDoor(): void {
+        this.currentGameRound.method = Method.SELECT_OTHER_DOOR;
+
+        Object.values(this.currentGameRound.doors).forEach(door => {
             if (!door.open && !door.selected) {
                 door.selected = true;
             } else {
                 door.selected = false;
             }
         });
+    }
 
-        this.currentGameRound.method = Method.SELECT_OTHER_DOOR;
-        this.completeGame();
+    private validateAction(action: string): void {
+        if (this.currentGameRound.actions.indexOf(action) === -1) {
+            throw new Error(`Game Engine Error: ${action} action not allowed.`);
+        }
     }
 
     public makeAction(action: string, payload?: any): IGameRound {
@@ -192,22 +206,20 @@ export class MontyHallGameEngine {
                 break;
             case 'SELECT_DOOR':
                 this.selectDoor(parseInt(payload, 10));
+                this.openRandomDoor();
                 break;
             case 'STAY':
-                this.currentGameRound.method = Method.STAY;
+                this.stay();
                 this.completeGame();
                 break;
             case 'SELECT_OTHER_DOOR':
                 this.selectOtherDoor();
+                this.completeGame();
                 break;
             default:
                 throw new Error("Game Engine Error: Invalid action.");
         }
 
-        return this.currentGameRound;
-    }
-
-    public getCurrentGame(): IGameRound {
         return this.currentGameRound;
     }
 }

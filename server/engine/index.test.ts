@@ -199,11 +199,14 @@ describe('Monty Hall Game Engine', () => {
         engine.makeAction("START");
         engine.makeAction("SELECT_DOOR", 2);
         engine.makeAction("STAY");
-        console.log("engine.getCurrentGame()", engine.getCurrentGame());
-    
-        const INVALID_ACTIONS = ["TEST_ACTION", "CANCEL"];
 
-        test.each(INVALID_ACTIONS)(
+        test("All doors should be open", () => {
+            const { doors } = engine.getCurrentGame();
+            expect(Object.values(doors).filter(door => door.open === false).length).toEqual(0);
+        });
+    
+
+        test.each(["TEST_ACTION", "CANCEL"])(
             `Should NOT be able to do action %s`,
             (action) => {
                 const expectError = () => {
