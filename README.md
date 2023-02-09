@@ -3,6 +3,8 @@
 * Install packages: `npm install`
 * Start application: `npm run start`
     - This command starts both the client and server concurrently
+* Run tests: `npm run test`
+* Run linting: `npm run lint`
 
 ## Code assignment
 ![Code assignment](static/assignment.png)
