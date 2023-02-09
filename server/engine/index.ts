@@ -1,29 +1,36 @@
-import { GameHistory } from "./history";
+import { GameHistory, IGameHistoryResponse } from "./history";
 
-enum DoorContent {
+export enum DoorContent {
     Win = "Win",
     Bust = "Bust"
 }
 
-enum State {
+export enum State {
     INACTIVE = "INACTIVE",
     ACTIVE = "ACTIVE",
     CANCELLED = "CANCELLED",
     COMPLETED = "COMPLETED",
 }
 
-enum Result {
+export enum Result {
     NOT_ACCESSIBLE = "NOT_ACCESSIBLE",
     WIN = "WIN",
     LOSS = "LOSS",
 }
 
+export enum Method {
+    NOT_ACCESSIBLE = "NOT_ACCESSIBLE",
+    STAY = "STAY",
+    SELECT_OTHER_DOOR = "SELECT_OTHER_DOOR",
+}
+
 // type Action = "START" | "SELECT" | "SELECT_DOOR" | "SELECT_OTHER_DOOR" | "CANCEL" | "STAY";  
 
 interface IDoor {
-    result: DoorContent,
-    open: boolean,
-    selected: boolean,
+    result: DoorContent;
+    open: boolean;
+    selected: boolean;
+    number: number;
 }
 
 interface IGameRound {
@@ -32,13 +39,7 @@ interface IGameRound {
     result: Result;
     doors: Record<number, IDoor>;
     actions: string[];
-}
-
-type IGameType = string;
-
-interface IGameEngineResponse {
-    gameType: IGameType;
-    gameRound: IGameRound;
+    method: Method;
 }
 
 // TODO: Validate state
@@ -66,18 +67,22 @@ export class MontyHallGameEngine {
             state: State.INACTIVE,
             actions: ["START"],
             result: Result.NOT_ACCESSIBLE,
+            method: Method.NOT_ACCESSIBLE,
             doors: {
                 1: {
+                    number: 1,
                     open: false,
                     selected: false,
                     result: DoorContent.Bust,
                 },
                 2: {
+                    number: 2,
                     open: false,
                     selected: false,
                     result: DoorContent.Bust,
                 },
                 3: {
+                    number: 3,
                     open: false,
                     selected: false,
                     result: DoorContent.Bust,
@@ -95,7 +100,7 @@ export class MontyHallGameEngine {
         });
     }
 
-    public getGameHistory(): any {
+    public getGameHistory(): IGameHistoryResponse {
         return this.gameHistory.getHistory();
     }
 
@@ -119,13 +124,14 @@ export class MontyHallGameEngine {
             this.createNewGameRound();
         }
         this.currentGameRound.state = State.ACTIVE;
-        this.currentGameRound.actions = ["SELECT_DOOR", "CANCEL"]
+        this.currentGameRound.actions = ["SELECT_DOOR", "CANCEL"];
     }
 
     private selectDoor(selectDoorNumber: number) {
         if (!this.currentGameRound.doors[selectDoorNumber]) {
             throw new Error(`Game Engine Error: Door with number ${selectDoorNumber} not available`);
         }
+        // TODO: Move open other door to other method
         const otherDoorNumbers: number[] = [1, 2, 3].filter(doorNumber => doorNumber !== selectDoorNumber);
         let doorNumberToOpen: number = otherDoorNumbers[Math.floor(Math.random() * 2)];
 
@@ -133,7 +139,7 @@ export class MontyHallGameEngine {
         if (this.currentGameRound.doors[doorNumberToOpen].result === DoorContent.Win) {
             // Ooops, can't open that door. It has the win!
             // Select the final remaining door.
-            doorNumberToOpen = otherDoorNumbers.filter(doorNumber => doorNumber !== doorNumberToOpen)[0]
+            doorNumberToOpen = otherDoorNumbers.filter(doorNumber => doorNumber !== doorNumberToOpen)[0];
         }
 
         this.currentGameRound.doors[selectDoorNumber].selected = true;
@@ -170,10 +176,11 @@ export class MontyHallGameEngine {
             }
         });
 
+        this.currentGameRound.method = Method.SELECT_OTHER_DOOR;
         this.completeGame();
     }
 
-    public makeAction(action: string, payload?: any): IGameEngineResponse {
+    public makeAction(action: string, payload?: any): IGameRound {
         this.validateAction(action);
 
         switch (action) {
@@ -187,6 +194,7 @@ export class MontyHallGameEngine {
                 this.selectDoor(parseInt(payload, 10));
                 break;
             case 'STAY':
+                this.currentGameRound.method = Method.STAY;
                 this.completeGame();
                 break;
             case 'SELECT_OTHER_DOOR':
@@ -196,16 +204,10 @@ export class MontyHallGameEngine {
                 throw new Error("Game Engine Error: Invalid action.");
         }
 
-        return {
-            gameType: this.gameType,
-            gameRound: this.currentGameRound,
-        };
+        return this.currentGameRound;
     }
 
-    public getCurrentGame(): IGameEngineResponse {
-        return {
-            gameType: this.gameType,
-            gameRound: this.currentGameRound,
-        };
+    public getCurrentGame(): IGameRound {
+        return this.currentGameRound;
     }
 }

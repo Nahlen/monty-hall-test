@@ -16,9 +16,40 @@ export const GameHistory = () => {
         initData();
     }, []);
 
+    console.log(history);
+
+    const Door = ({ hasCar }) => {
+        return <div className={style.door}>{hasCar && "🚗"}</div>;
+    };
+
     return <div className={style.wrapper}>
         <Link to={"/"}><button>{languages.CANCEL}</button></Link>
         <h1>{languages.GAME_HISTORY}</h1>
-        {JSON.stringify(history, null, 2)}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>State</th>
+                    <th>Doors</th>
+                    <th>Choice</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                {history.reverse().map((entry:any) => (<tr key={entry.date}>
+                        <td>{entry.date}</td>
+                        <td>{entry.data.state}</td>
+                        <td className={style.doors}>
+                            <Door hasCar={entry.data.doors[1].result === "Win"} />
+                            <Door hasCar={entry.data.doors[2].result === "Win"} />
+                            <Door hasCar={entry.data.doors[3].result === "Win"} />
+                        </td>
+                        <td>{entry.data.method}</td>
+                        <td>{entry.data.result}</td>
+                    </tr>
+                ))}
+            </tbody> 
+        </table>
+        
     </div>;
-}
+};

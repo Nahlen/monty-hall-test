@@ -7,8 +7,8 @@ export const StartPage = () => {
     const { languages } = useStaticContext();
 
     return <div className={style.wrapper}>
-        <Link to={"/game"}><button>{languages.PLAY_THE_GAME}</button></Link>
         <Link to={"/simulate"}><button>{languages.SIMULATE}</button></Link>
+        <Link to={"/game"}><button>{languages.PLAY_THE_GAME}</button></Link>
         <Link to={"/history"}><button>{languages.GAME_HISTORY}</button></Link>
     </div>;
-}
+};

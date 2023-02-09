@@ -6,17 +6,15 @@ import { MontyHallGameEngine } from "./engine";
 const app = express();
 const port = 8080;
 
-interface ResponseError extends Error {
-    status?: number;
-}
-
 const gameEngine = new MontyHallGameEngine();
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(function (err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
-    console.error(err);
+
+// next function must be defined in this middleware here, even though it is not used
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err: any, req: express.Request, res: express.Response, next: NextFunction) => {
     res.status(err.status || 500).json();
 });
 
@@ -31,33 +29,41 @@ app.get("/round", (req: Request, res: Response) => {
 });
 
 app.get("/simulate", (req: Request, res: Response) => {
-    const simulationEngine = new MontyHallGameEngine();
-
+    const simulationResult = [];
     const simulations = parseInt(req.query?.simulations?.toString() || "0");
-    const method = req.query?.method?.toString() || "";
+    const methods = req.query?.methods?.toString().split(",") || "";
 
     const missingParams = [];
     if (simulations === 0) {
         missingParams.push("simulations");
     }
-    if (method === "") {
-        missingParams.push("method");
+    if (methods.length === 0) {
+        missingParams.push("methods");
     }
     if (missingParams.length > 0) {
         throw new Error(`Missing params: ${missingParams}`);
     }
 
-    for(let i = 1; i <= simulations; i++) {
-        simulationEngine.makeAction("START");
-        simulationEngine.makeAction("SELECT_DOOR", Math.floor(Math.random() * 3 + 1));
-        simulationEngine.makeAction(method);
+    for (let j = 0; j < methods.length; j++) {
+        const simulationEngine = new MontyHallGameEngine();
+
+        for(let i = 1; i <= simulations; i++) {
+            simulationEngine.makeAction("START");
+            simulationEngine.makeAction("SELECT_DOOR", Math.floor(Math.random() * 3 + 1));
+            simulationEngine.makeAction(methods[j]);
+        }
+
+        simulationResult.push({
+            method: methods[j],
+            result: simulationEngine.getGameHistory().history.map(his => his.data.result)
+        });
     }
 
-    res.json(simulationEngine.getGameHistory());
+    res.json(simulationResult);
 });
 
 
-app.post("/action", (req: Request, res: Response, next: NextFunction) => {
+app.post("/action", (req: Request, res: Response) => {
     try {
         const action = req.query.action?.toString() || "";
         const payload = req.query.payload || {};

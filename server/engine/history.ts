@@ -5,7 +5,7 @@ interface IGameHistoryEntry {
 
 type IGameType = string;
 
-interface IGameHistoryResponse {
+export interface IGameHistoryResponse {
     gameType: IGameType;
     history: IGameHistoryEntry[];
 }
@@ -28,6 +28,5 @@ export class GameHistory {
             gameType: this.gameType,
             history: this.history,
         };
-        // .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) ???
     }
 }

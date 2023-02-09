@@ -29,8 +29,8 @@
 }
 
 .selected {
-    box-shadow: 0 0 2px #fff, 0 0 10px #fff, 0 0 20px red, 0 0 30px red,
-        0 0 40px red, 0 0 50px red;
+    box-shadow: 0 0 2px #fff, 0 0 10px #fff, 0 0 20px rgb(255, 204, 0), 0 0 30px rgb(255, 204, 0),
+        0 0 40px rgb(255, 102, 0), 0 0 50px rgb(255, 102, 0);
     animation: blink 0.7s infinite alternate;
 }
 
@@ -46,7 +46,7 @@
     align-items: center;
 
     &.open {
-        transform: perspective(1200px) translateZ(0px) translateX(0px) translateY(0px) rotateY(-105deg);
+        transform: perspective(1200px) translateZ(0px) translateX(0px) translateY(0px) rotateY(-110deg);
     }
 }
 

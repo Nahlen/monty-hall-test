@@ -7,3 +7,21 @@
     justify-content: space-evenly; 
     position: relative;
 }
+
+table {
+    text-align: left;
+}
+
+.doors {
+    display: flex;
+}
+
+.door {
+    height: 3.5em;
+    width: 2em;
+    background: linear-gradient(#2d545e, #12343b);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 .1em;
+}

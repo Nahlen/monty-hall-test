@@ -1,18 +1,10 @@
 import React from "react";
 import * as style from "./index.module.scss";
 
-/* interface IDoorProps {
-    hasCar: boolean,
-    open: boolean,
-    index: number,
-    selectedDoor: number | boolean,
-    selectDoor: Function
-} */
-
 export const Door = ({ door, doorNumber, selectDoor, selectable }: any) => {
     if (!door) {
         return null;
-    };
+    }
 
     return <div
         className={`
@@ -31,5 +23,5 @@ export const Door = ({ door, doorNumber, selectDoor, selectable }: any) => {
                 ?
             </div>
         </div>
-    </div>
-}
+    </div>;
+};

@@ -9,7 +9,9 @@
     "rootDir": "./",
     "outDir": "./dist",
     "forceConsistentCasingInFileNames": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "declaration": true,
+    "declarationDir": "./types"
   },
   
   "include": [

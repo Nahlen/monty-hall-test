@@ -14,16 +14,6 @@ export const Game = () => {
     const { languages } = useStaticContext();
     const navigate = useNavigate();
 
-    const initGame = async () => {
-        const gameRound = await getGameRound();
-        setGameRound(gameRound);
-        const { state } = gameRound;
-        if (state === "INACTIVE" || state === "COMPLETED") {
-            await makeAction("START");
-        }
-        setLoading(false);
-    };
-    
     const makeAction = async (action: string, payload: any = null) => {
         const gameRound = await postAction(action, payload);
         setGameRound(gameRound);
@@ -34,26 +24,35 @@ export const Game = () => {
             return;
         }
         makeAction("SELECT_DOOR", doorNumber);
-    }
+    };
 
-    const goHome = async() => {
+    const goHome = async () => {
         if (actions.indexOf("CANCEL") !== -1) {
-            await makeAction("CANCEL")
+            await makeAction("CANCEL");
         }
         navigate("/");
-    }
+    };
+
+    const initGame = async () => {
+        const gameRound = await getGameRound();
+        setGameRound(gameRound);
+        const { state } = gameRound;
+        if (state === "INACTIVE" || state === "COMPLETED") {
+            await makeAction("START");
+        }
+        setLoading(false);
+    };
 
     useEffect(() => {
         try {
             initGame();
         } catch (error) {
-            console.error(`ERROR: ${error}`)
+            console.error(`ERROR: ${error}`);
         }
     }, []);
 
-    const { actions = [], doors = {}, result = null, state } = gameRound || {};
+    const { actions = [], doors = {}, result = null } = gameRound || {};
     const selectable = actions.indexOf("SELECT_DOOR") !== -1;
-    // const showOverlay = actions.indexOf("START") !== -1;
     let explainText = " ";
 
     if (selectable) {
@@ -72,12 +71,12 @@ export const Game = () => {
         <div className={style.gameArea}>
             {!gameRound && <div>Loading</div>}
             {gameRound && <>
-                    <div className={style.doorsWrapper}>
-                        <Door door={doors[1]} doorNumber={1} selectDoor={selectDoor} selectable={selectable}/>
-                        <Door door={doors[2]} doorNumber={2} selectDoor={selectDoor} selectable={selectable}/>
-                        <Door door={doors[3]} doorNumber={3} selectDoor={selectDoor} selectable={selectable}/>
-                    </div>
-                    <h1>{explainText}</h1>     
+                <div className={style.doorsWrapper}>
+                    <Door door={doors[1]} doorNumber={1} selectDoor={selectDoor} selectable={selectable} />
+                    <Door door={doors[2]} doorNumber={2} selectDoor={selectDoor} selectable={selectable} />
+                    <Door door={doors[3]} doorNumber={3} selectDoor={selectDoor} selectable={selectable} />
+                </div>
+                <h1>{explainText}</h1>
             </>}
 
             <div className={style.buttonWrapper}>
@@ -95,12 +94,5 @@ export const Game = () => {
                 })}
             </div>
         </div>
-
-
-        {/* {showOverlay && <div className={style.overlay}>
-            <ActionButton action={"START"} makeAction={() => makeAction("START")} />
-        </div>}
- */}
-
-    </div>
+    </div>;
 };
