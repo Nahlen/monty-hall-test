@@ -117,6 +117,11 @@ export class MontyHallGameEngine {
             throw new Error(`Game Engine Error: Door with number ${selectDoorNumber} not available`);
         }
 
+        // Deselect all doors
+        Object.values(this.currentGameRound.doors).forEach(door => {
+            door.selected = false;
+        });
+
         this.currentGameRound.doors[selectDoorNumber].selected = true;
         this.currentGameRound.actions = ["STAY", "SELECT_OTHER_DOOR", "CANCEL"];
     }
@@ -164,13 +169,16 @@ export class MontyHallGameEngine {
     private selectOtherDoor(): void {
         this.currentGameRound.method = Method.SELECT_OTHER_DOOR;
 
-        Object.values(this.currentGameRound.doors).forEach(door => {
+        const otherDoor = Object.values(this.currentGameRound.doors).find(door => !door.selected && !door.open);
+
+        this.selectDoor(otherDoor?.number || 0);
+        /* Object.values(this.currentGameRound.doors).forEach(door => {
+            // Select the door that is not opened and not selected
+            console.log("DOOR", door.open, door.selected);
             if (!door.open && !door.selected) {
-                door.selected = true;
-            } else {
-                door.selected = false;
+                this.selectDoor(door.number);
             }
-        });
+        }); */
     }
 
     private validateAction(action: string): void {

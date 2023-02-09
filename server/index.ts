@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 
 import { MontyHallGameEngine } from "./engine";
+import { simulateGames } from "./engine/helpers";
 
 const app = express();
 const port = 8080;
@@ -29,9 +30,8 @@ app.get("/round", (req: Request, res: Response) => {
 });
 
 app.get("/simulate", (req: Request, res: Response) => {
-    const simulationResult = [];
     const simulations = parseInt(req.query?.simulations?.toString() || "0");
-    const methods = req.query?.methods?.toString().split(",") || "";
+    const methods = req.query?.methods?.toString().split(",") || [];
 
     const missingParams = [];
     if (simulations === 0) {
@@ -44,22 +44,9 @@ app.get("/simulate", (req: Request, res: Response) => {
         throw new Error(`Missing params: ${missingParams}`);
     }
 
-    for (let j = 0; j < methods.length; j++) {
-        const simulationEngine = new MontyHallGameEngine();
+    const result = simulateGames(methods, simulations);
 
-        for(let i = 1; i <= simulations; i++) {
-            simulationEngine.makeAction("START");
-            simulationEngine.makeAction("SELECT_DOOR", Math.floor(Math.random() * 3 + 1));
-            simulationEngine.makeAction(methods[j]);
-        }
-
-        simulationResult.push({
-            method: methods[j],
-            result: simulationEngine.getGameHistory().history.map(his => his.data.result)
-        });
-    }
-
-    res.json(simulationResult);
+    res.json(result);
 });
 
 
