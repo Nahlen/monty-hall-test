@@ -296,7 +296,7 @@ describe('Monty Hall Game Engine', () => {
         });
     });
 
-    describe('Loosing situation', () => {
+    describe('Losing situation', () => {
         test('Selecting door without win with method STAY should result in LOSS', () => {
             const engine = new MontyHallGameEngine();
             engine.makeAction("START");
@@ -307,7 +307,7 @@ describe('Monty Hall Game Engine', () => {
             expect(engine.getCurrentGame().result).toBe(Result.LOSS);
         });
 
-        test('Selecting door win with method SELECT_OTHER_DOOR should result in LOSS', () => {
+        test('Selecting door with win with method SELECT_OTHER_DOOR should result in LOSS', () => {
             const engine = new MontyHallGameEngine();
             engine.makeAction("START");
             const winningDoor = Object.values(engine.getCurrentGame().doors).find(door => door.result === DoorContent.Win);
