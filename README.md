@@ -20,7 +20,7 @@
 
 ### Future improvements
 * The `Game Engine` itself should not be written in `node.js` (server being `node.js` is not an issue). Writing mathematical logic and testing propabilities works a lot better with a language like `C#`
-* Maybe the `INACTIVE` state of game round in the `Game ENgine` was an unecessary concept. It introduced a state which only existed when the engine was created. After that it never goes back to `INACTIVE`, since it will go from the latest round with state `COMPLETED` to `ACTIVE`
+* Maybe the `INACTIVE` state of game round in the `Game Engine` was an unecessary concept. It introduced a state which only existed when the engine was created. After that it never goes back to `INACTIVE`, since it will go from the latest round with state `COMPLETED` to `ACTIVE`
 * Game rules
 * More testing
     - UI testing
