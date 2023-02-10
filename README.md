@@ -1,13 +1,11 @@
 # Monty Hall Problem
 ## Instructions
+* Implemented with node version `19.x`
 * Install packages: `npm install`
 * Start application: `npm run start`
     - This command starts both the client and server concurrently
 * Run tests: `npm run test`
 * Run linting: `npm run lint`
-
-## Code assignment
-![Code assignment](static/assignment.png)
 
 ## Goals
 * All game logic should be handled by the `Game Engine`
@@ -27,7 +25,7 @@
 * Right now the engine does not consider multiple sessions, users, etc.
 
 ### Known bugs
-* The game engine returns which door has `Win` before game is completed, basically the door with the win can be known before selecting door if you look in the api response.
+* The game engine method `getCurrentGame` does not "hide" which door has win. Basically by looking at the response data you can see which door has the win before completing game.
 * Game history should include all the player choices, for example the selected door, which door was opened, etc.
 
 ## Game engine

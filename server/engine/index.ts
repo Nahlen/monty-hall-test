@@ -170,7 +170,7 @@ export class MontyHallGameEngine {
     }
 
     private validateAction(action: string): void {
-        if (this.currentGameRound.actions.indexOf(action) === -1) {
+        if (!this.currentGameRound.actions.includes(action)) {
             throw new Error(`Game Engine Error: ${action} action not allowed.`);
         }
     }
