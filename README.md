@@ -7,6 +7,11 @@
 * Run tests: `npm run test`
 * Run linting: `npm run lint`
 
+### Api testing
+* Use postman: https://www.postman.com/downloads/
+* Import collection `Monty Hall.postman_collection.json` provided in this repo
+    - This is a good way to test the game engine, for example posting invalid actions
+
 ## Goals
 * All game logic should be handled by the `Game Engine`
 * Game should be client agnostic, i.e. totally playable without UI logic

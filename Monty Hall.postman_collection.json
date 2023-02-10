@@ -1,0 +1,206 @@
+{
+	"info": {
+		"_postman_id": "cd3abc5b-802b-43a7-830d-61c91bc68f55",
+		"name": "Monty Hall",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3040395"
+	},
+	"item": [
+		{
+			"name": "HISTORY",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/history",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"history"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ROUND",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/round",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"round"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "START",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/action?action=START",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"action"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "START"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SELECT_DOOR",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/action?action=SELECT_DOOR&payload=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"action"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "SELECT_DOOR"
+						},
+						{
+							"key": "payload",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "STAY",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/action?action=STAY",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"action"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "STAY"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SELECT_OTHER_DOOR",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/action?action=SELECT_OTHER_DOOR",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"action"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "SELECT_OTHER_DOOR"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CANCEL",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/action?action=CANCEL",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"action"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "CANCEL"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SIMULATE",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/simulate?simulations=10&methods=STAY,SELECT_OTHER_DOOR",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"simulate"
+					],
+					"query": [
+						{
+							"key": "simulations",
+							"value": "10"
+						},
+						{
+							"key": "methods",
+							"value": "STAY,SELECT_OTHER_DOOR"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
